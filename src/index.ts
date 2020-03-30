@@ -1,11 +1,13 @@
 import * as fastify from 'fastify'
 import * as fastifyBlipp from 'fastify-blipp'
 import { Server, IncomingMessage, ServerResponse } from 'http'
-import statusRoutes from './routes'
-const server: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify()
+import routes from './routes'
+const server: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify({
+    logger: true,
+})
 
 server.register(fastifyBlipp)
-server.register(statusRoutes)
+server.register(routes)
 
 const start = async () => {
     try {
