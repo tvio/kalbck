@@ -27,6 +27,7 @@
         "fastify-blipp": "^2.2.1",
         "fastify-plugin": "^1.6.1",
         "fastify-swagger": "^2.5.0",
-        "massive": "^6.2.0"
+        "massive": "^6.2.0",
+        "pino-pretty": "^4.0.0"
     }
 }
