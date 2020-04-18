@@ -18,7 +18,7 @@ const optsSwagger = {
         },
     },
     exposeRoute: true,
-    routePrefix: '/',
+    routePrefix: '/kal',
 }
 
 server.register(routes)

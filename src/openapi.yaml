@@ -1,394 +1,397 @@
 openapi: 3.0.0
 info:
-  title: Kalendář
-  description: "REST API pro Kal \n"
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.0
+    title: Kalendář
+    description: "REST API pro Kal \n"
+    license:
+        name: Apache 2.0
+        url: http://www.apache.org/licenses/LICENSE-2.0.html
+    version: 1.0.0
 servers:
-  - url: http://localhost:3001/kal
-    description: vývojový server
+    - url: http://localhost:3001/kal
+      description: vývojový server
 tags:
-  - name: dny
-    description: CRU pro každý den
-  - name: chaty
-    description: CRUD pro chat ke dni
+    - name: dny
+      description: CRU pro každý den
+    - name: chaty
+      description: CRUD pro chat ke dni
 paths:
-  /dny:
-    get:
-      tags:
-        - dny
-      summary: Načíst dny
-      operationId: getDny
-      parameters:
-        - name: pageSize
-          in: query
-          description: velikost stránky
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: integer
-        - name: pageNumber
-          in: query
-          description: stránka
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: okey dokey
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/dny"
-        "401":
-          description: uživatel není přihlášení
-      security:
-        - kal_auth:
-            - read
+    /dny:
+        get:
+            tags:
+                - dny
+            summary: Načíst dny
+            operationId: getDny
+            parameters:
+                - name: pageSize
+                  in: query
+                  description: velikost stránky
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: integer
+                - name: pageNumber
+                  in: query
+                  description: stránka
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: integer
+            responses:
+                '200':
+                    description: okey dokey
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/dny'
+                '401':
+                    description: uživatel není přihlášení
+            security:
+                - kal_auth:
+                      - read
 
-    put:
-      tags:
-        - dny
-      summary: Aktualizovat den
-      operationId: updateDen
-      requestBody:
-        $ref: "#/components/requestBodies/den"
-      responses:
-        "200":
-          description: okey dokey
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/den"
-        "400":
-          description: JSON není validní
-        "401":
-          description: uživatel není přihlášení
-        "404":
-          description: ID nenalezeno
-      security:
-        - kal_auth:
-            - write:den
-            - read:den
-    post:
-      tags:
-        - dny
-      summary: Přidat den
-      operationId: addDen
-      requestBody:
-        $ref: "#/components/requestBodies/den"
-      responses:
-        "200":
-          description: okey dokey
-        "400":
-          description: JSON není validní
-        "401":
-          description: uživatel není přihlášení
-      security:
-        - kal_auth:
-            - write:den
-            - read:den
-  /dny/{id}:
-    get:
-      tags:
-        - dny
-      summary: Najdi den dle Id
-      operationId: getDenById
-      parameters:
-        - name: id
-          in: path
-          description: Id které používáme
-          required: true
-          style: simple
-          explode: false
-          schema:
-            $ref: "#/components/schemas/id"
-      responses:
-        "200":
-          description: okey dokey
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/den"
-        "401":
-          description: uživatel není přihlášení
-        "404":
-          description: ID nenalezeno
-      security:
-        - kal_auth:
-            - write:den
-            - read:den
-  /dny/{id}/chaty:
-    get:
-      tags:
-        - dny
-      summary: Vypiš všechny chaty za daný den
-      operationId: getAllChatsByDenId
-      parameters:
-        - name: id
-          in: path
-          description: Id které používáme
-          required: true
-          style: simple
-          explode: false
-          schema:
-            $ref: "#/components/schemas/id"
-      responses:
-        "200":
-          description: okey dokey
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/chaty"
-        "401":
-          description: uživatel není přihlášení
-        "404":
-          description: ID nenalezeno
-      security:
-        - kal_auth:
-            - write:den
-            - read:den
-  /chaty:
-    put:
-      tags:
-        - chaty
-      summary: Aktualizovat chat
-      operationId: updateChat
-      requestBody:
-        $ref: "#/components/requestBodies/chat"
-      responses:
-        "200":
-          description: okey dokey
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/chat"
-        "400":
-          description: JSON není validní
-        "401":
-          description: uživatel není přihlášení
-        "404":
-          description: ID nenalezeno
-        "405":
-          description: chat nelze zprocesovat, denID neexisuje
-      security:
-        - kal_auth:
-            - write:den
-            - read:den
-    post:
-      tags:
-        - chaty
-      summary: Vlož chat pro daný den
-      operationId: postChatByDenId
-      requestBody:
-        $ref: "#/components/requestBodies/chat"
-      responses:
-        "200":
-          description: okey dokey
-        "401":
-          description: uživatel není přihlášení
-        "405":
-          description: chat nelze zprocesovat, denID neexisuje
-      security:
-        - kal_auth:
-            - write:den
-            - read:den
-  /chaty/{id}:
-    get:
-      tags:
-        - chaty
-      summary: Najdi chat dle Id
-      operationId: getChatById
-      parameters:
-        - name: id
-          in: path
-          description: Id které používáme
-          required: true
-          style: simple
-          explode: false
-          schema:
-            $ref: "#/components/schemas/id"
-      responses:
-        "200":
-          description: okey dokey
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/chat"
-        "401":
-          description: uživatel není přihlášení
-        "404":
-          description: ID nenalezeno
-      security:
-        - kal_auth: [read]
-    delete:
-      tags:
-        - chaty
-      summary: Smaž chat dle Id
-      operationId: deleteChatById
-      parameters:
-        - name: id
-          in: path
-          description: Id které používáme
-          required: true
-          style: simple
-          explode: false
-          schema:
-            $ref: "#/components/schemas/id"
-      responses:
-        "200":
-          description: okey dokey
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/chat"
-        "401":
-          description: uživatel není přihlášení
-        "404":
-          description: ID nenalezeno
-      security:
-        - kal_auth:
-            - write:den
-            - read:den
+        put:
+            tags:
+                - dny
+            summary: Aktualizovat den
+            operationId: updateDen
+            requestBody:
+                $ref: '#/components/requestBodies/den'
+            responses:
+                '200':
+                    description: okey dokey
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/den'
+                '400':
+                    description: JSON není validní
+                '401':
+                    description: uživatel není přihlášení
+                '404':
+                    description: ID nenalezeno
+            security:
+                - kal_auth:
+                      - write:den
+                      - read:den
+        post:
+            tags:
+                - dny
+            summary: Přidat den
+            operationId: addDen
+            requestBody:
+                $ref: '#/components/requestBodies/den'
+            responses:
+                '200':
+                    description: okey dokey
+                '400':
+                    description: JSON není validní
+                '401':
+                    description: uživatel není přihlášení
+            security:
+                - kal_auth:
+                      - write:den
+                      - read:den
+    /dny/{datum}:
+        get:
+            tags:
+                - dny
+            summary: Najdi den dle datumu
+            operationId: getDenByDatum
+            parameters:
+                - name: datum
+                  in: path
+                  description: datum
+                  required: true
+                  style: simple
+                  explode: false
+                  schema:
+                      $ref: '#/components/schemas/den/datum'
+            responses:
+                '200':
+                    description: okey dokey
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/den'
+                '401':
+                    description: uživatel není přihlášení
+                '404':
+                    description: ID nenalezeno
+            security:
+                - kal_auth:
+                      - write:den
+                      - read:den
+    /dny/{id}/chaty:
+        get:
+            tags:
+                - dny
+            summary: Vypiš všechny chaty za daný den
+            operationId: getAllChatsByDenId
+            parameters:
+                - name: id
+                  in: path
+                  description: Id které používáme
+                  required: true
+                  style: simple
+                  explode: false
+                  schema:
+                      $ref: '#/components/schemas/id'
+            responses:
+                '200':
+                    description: okey dokey
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/chaty'
+                '401':
+                    description: uživatel není přihlášení
+                '404':
+                    description: ID nenalezeno
+            security:
+                - kal_auth:
+                      - write:den
+                      - read:den
+    /chaty:
+        put:
+            tags:
+                - chaty
+            summary: Aktualizovat chat
+            operationId: updateChat
+            requestBody:
+                $ref: '#/components/requestBodies/chat'
+            responses:
+                '200':
+                    description: okey dokey
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/chat'
+                '400':
+                    description: JSON není validní
+                '401':
+                    description: uživatel není přihlášení
+                '404':
+                    description: ID nenalezeno
+                '405':
+                    description: chat nelze zprocesovat, denID neexisuje
+            security:
+                - kal_auth:
+                      - write:den
+                      - read:den
+        post:
+            tags:
+                - chaty
+            summary: Vlož chat pro daný den
+            operationId: postChatByDenId
+            requestBody:
+                $ref: '#/components/requestBodies/chat'
+            responses:
+                '200':
+                    description: okey dokey
+                '401':
+                    description: uživatel není přihlášení
+                '405':
+                    description: chat nelze zprocesovat, denID neexisuje
+            security:
+                - kal_auth:
+                      - write:den
+                      - read:den
+    /chaty/{denId}:
+        get:
+            tags:
+                - chaty
+            summary: Najdi chat dle den
+            operationId: getChatById
+            parameters:
+                - name: datum
+                  in: path
+                  description: chaty dle dne
+                  required: true
+                  style: simple
+                  explode: false
+                  schema:
+                      $ref: '#/components/schemas/id'
+            responses:
+                '200':
+                    description: okey dokey
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/chat'
+                '401':
+                    description: uživatel není přihlášení
+                '404':
+                    description: ID nenalezeno
+            security:
+                - kal_auth: [read]
+        delete:
+            tags:
+                - chaty
+            summary: Smaž chat dle Id
+            operationId: deleteChatById
+            parameters:
+                - name: id
+                  in: path
+                  description: Id které používáme
+                  required: true
+                  style: simple
+                  explode: false
+                  schema:
+                      $ref: '#/components/schemas/id'
+            responses:
+                '200':
+                    description: okey dokey
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/chat'
+                '401':
+                    description: uživatel není přihlášení
+                '404':
+                    description: ID nenalezeno
+            security:
+                - kal_auth:
+                      - write:den
+                      - read:den
 
 components:
-  schemas:
-    id:
-      type: integer
-      description: id dne nebo chatu
-      default: 1
-    den:
-      required:
-        - datum
-        - den
-        - id
-      type: object
-      properties:
+    schemas:
         id:
-          $ref: "#/components/schemas/id"
-        kdo:
-          type: string
-          description: kdo má ušáka
-          default: Janik
-          enum:
-            - Janik
-            - Dalibor
-        datum:
-          type: string
-          description: datum v roce
-          format: date
+            type: integer
+            description: id dne nebo chatu. Pro POST neni potreba vkladat, interni SEQ v DB
+            default: 1
         den:
-          type: string
-          description: den v týdnu
-          default: ÚT
-        pozn1:
-          type: string
-          description: aktivita zapsaná Janíkem
-          default: návštěva výstavy košťat
-        pozn2:
-          type: string
-          description: aktivita zapsaná Tomíkem
-          default: MotoGP Brno
-        pozn3:
-          type: string
-          description: aktivita zapsaná Daliborem
-          default: Poflakování na rohu u nádraží
-    chat:
-      required:
-        - datum
-        - denID
-        - id
-        - kdo
-        - text
-      type: object
-      properties:
+            required:
+                - datum
+                - den
+
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/id'
+                kdo:
+                    type: string
+                    description: kdo má ušáka
+                    default: Janik
+                    enum:
+                        - Janik
+                        - Dalibor
+                datum:
+                    type: string
+                    description: datum v roce
+                    format: date
+                den:
+                    type: string
+                    description: den v týdnu
+                    default: ÚT
+                pozn1:
+                    type: string
+                    description: aktivita zapsaná Janíkem
+                    default: návštěva výstavy košťat
+                pozn2:
+                    type: string
+                    description: aktivita zapsaná Tomíkem
+                    default: MotoGP Brno
+                pozn3:
+                    type: string
+                    description: aktivita zapsaná Daliborem
+                    default: Poflakování na rohu u nádraží
+                ss:
+                    type: boolean
+                    description: v dany den je statni svatek
+                    default: false
+        chat:
+            required:
+                - datum
+                - denID
+                - kdo
+                - text
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/id'
+                datum:
+                    type: string
+                    description: datum a čas chatu
+                    format: date-time
+                    default: 2020-07-01T15:21:16Z
+                denID:
+                    $ref: '#/components/schemas/id'
+                kdo:
+                    type: string
+                    description: kdo vložil chat
+                    default: Janik
+                    enum:
+                        - Tomik
+                        - Janik
+                text:
+                    type: string
+                    description: obsah připomínky
+                    default: Taková blbost, to svět neviděl
+        dny:
+            type: array
+            items:
+                $ref: '#/components/schemas/den'
+        chaty:
+            type: array
+            items:
+                $ref: '#/components/schemas/chat'
+    responses:
+        unauthorized:
+            description: uživatel není přihlášení
+        notfound:
+            description: ID nenalezeno
+        nonvalid:
+            description: JSON není validní
+        notfound2:
+            description: chat nelze zprocesovat, denID neexisuje
+    parameters:
         id:
-          $ref: "#/components/schemas/id"
-        datum:
-          type: string
-          description: datum a čas chatu
-          format: date-time
-          default: 2020-07-01T15:21:16Z
-        denID:
-          $ref: "#/components/schemas/id"
-        kdo:
-          type: string
-          description: kdo vložil chat
-          default: Janik
-          enum:
-            - Tomik
-            - Janik
-        text:
-          type: string
-          description: obsah připomínky
-          default: Taková blbost, to svět neviděl
-    dny:
-      type: array
-      items:
-        $ref: "#/components/schemas/den"
-    chaty:
-      type: array
-      items:
-        $ref: "#/components/schemas/chat"
-  responses:
-    unauthorized:
-      description: uživatel není přihlášení
-    notfound:
-      description: ID nenalezeno
-    nonvalid:
-      description: JSON není validní
-    notfound2:
-      description: chat nelze zprocesovat, denID neexisuje
-  parameters:
-    id:
-      name: id
-      in: path
-      description: Id které používáme
-      required: true
-      style: simple
-      explode: false
-      schema:
-        $ref: "#/components/schemas/id"
-    pageSize:
-      name: pageSize
-      in: query
-      description: velikost stránky
-      required: false
-      style: form
-      explode: true
-      schema:
-        type: integer
-    pageNumber:
-      name: pageNumber
-      in: query
-      description: stránka
-      required: false
-      style: form
-      explode: true
-      schema:
-        type: integer
-  requestBodies:
-    den:
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/den"
-      required: true
-    chat:
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/chat"
-      required: true
-  securitySchemes:
-    kal_auth:
-      type: oauth2
-      flows:
-        authorizationCode:
-          authorizationUrl: "https://accounts.google.com/o/oauth2/v2/auth"
-          tokenUrl: "https://www.googleapis.com/oauth2/v4/token"
+            name: id
+            in: path
+            description: Id které používáme
+            required: true
+            style: simple
+            explode: false
+            schema:
+                $ref: '#/components/schemas/id'
+        pageSize:
+            name: pageSize
+            in: query
+            description: velikost stránky
+            required: false
+            style: form
+            explode: true
+            schema:
+                type: integer
+        pageNumber:
+            name: pageNumber
+            in: query
+            description: stránka
+            required: false
+            style: form
+            explode: true
+            schema:
+                type: integer
+    requestBodies:
+        den:
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/den'
+            required: true
+        chat:
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/chat'
+            required: true
+    securitySchemes:
+        kal_auth:
+            type: oauth2
+            flows:
+                authorizationCode:
+                    authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth'
+                    tokenUrl: 'https://www.googleapis.com/oauth2/v4/token'
