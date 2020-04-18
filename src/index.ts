@@ -3,7 +3,9 @@ import * as fastifyBlipp from 'fastify-blipp'
 import * as fastifySwagger from 'fastify-swagger'
 import { Server, IncomingMessage, ServerResponse } from 'http'
 import * as path from 'path'
-import * as routes from './routes'
+import routes from './routes'
+import db from './db'
+import settings from './settings'
 const server: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify({
     logger: { prettyPrint: true },
 })
@@ -19,12 +21,13 @@ const optsSwagger = {
     routePrefix: '/',
 }
 
-server.register(fastifyBlipp)
-server.register(routes.test, routes.test2)
+server.register(routes)
 server.register(fastifySwagger, optsSwagger)
+server.register(fastifyBlipp)
 
 const start = async (): Promise<void> => {
     try {
+        await db.connect(settings.postgresql)
         await server.listen(3001)
         server.blipp()
     } catch (err) {

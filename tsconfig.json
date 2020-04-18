@@ -11,6 +11,7 @@
         "sourceMap": true,
         "outDir": "./dist"
     },
-    "include": ["./src/**/*.ts"],
+    "allowJs": true,
+    "include": ["./src/**/*.ts", "src/db.ts"],
     "exclude": ["node_modules"]
 }
