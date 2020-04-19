@@ -12,7 +12,7 @@ const server: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse> =
 const optsSwagger = {
     mode: 'static',
     specification: {
-        path: path.join(__dirname, 'openapi.yaml'),
+        path: path.join(__dirname, '../openapi.yaml'),
         postProcessor: function (swaggerObject): void {
             return swaggerObject
         },

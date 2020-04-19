@@ -1,6 +1,7 @@
 import * as fastify from 'fastify'
 import db from './db'
 import { request } from 'http'
+import * as moment from 'moment'
 // import * as fp from 'fastify-plugin'
 
 // const opts: fastify.RouteShorthandOptions = {
@@ -27,6 +28,9 @@ import { request } from 'http'
 export default async function (fastify, opts) {
     fastify.get('/kal/dny', async function (req, reply) {
         const ret = await db.instance.dny.find()
+        for (const i in ret) {
+            ret[i].datum = moment(ret[i].datum).format('YYYY-MM-DD')
+        }
         console.log('response:', JSON.stringify(ret))
         return ret
     })
@@ -45,10 +49,19 @@ export default async function (fastify, opts) {
     })
 
     fastify.get('/kal/dny/:datum', opts, async function (req, reply) {
-        const ret = await db.instance.dny.findOne({ datum: req.params.datum })
-        // shows: { user: 'My serializer father - call father  serializer', key: 'another key' }
-        console.log('response:', JSON.stringify(ret))
-        return ret
+        //const datum = moment(req.params.datum, 'YYYY-MM-DD')
+        //console.log('fromatovane datum', datum)
+        try {
+            const sql = `to_char(datum,'YYYY-MM-DD')='${req.params.datum}'`
+            const ret = await db.instance.dny.where(sql)
+            ret[0].datum = moment(ret[0].datum).format('YYYY-MM-DD')
+            console.log('response:', ret[0])
+            return ret[0]
+        } catch (err) {
+            console.log('Err ' + err)
+            db.instance.disconnect()
+            return err
+        }
     })
 
     fastify.get('/kal/dny/{id}/chaty', async function (req, reply) {

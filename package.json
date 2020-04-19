@@ -5,10 +5,10 @@
     "description": "Kal bck",
     "scripts": {
         "startx": "yarn run build && node dist/index.js",
-        "startx:dev": "cross-env NODE_ENV=development docker-compose up -d && nodemon",
-        "build": "tsc && node ./dist/index.js",
+        "startx:dev": "cross-env NODE_ENV=dev docker-compose up -d && nodemon",
+        "build": "tsc &&  node ./dist/index.js",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-        "start": "nodemon ./src/index.ts"
+        "start": "nodemon -r  ./src/index.ts"
     },
     "devDependencies": {
         "@types/node": "^13.9.5",
@@ -31,6 +31,7 @@
         "fastify-plugin": "^1.6.1",
         "fastify-swagger": "^2.5.0",
         "massive": "^6.3.0",
+        "moment": "^2.24.0",
         "pg-monitor": "^1.4.0",
         "pino-pretty": "^4.0.0",
         "qs": "^6.9.3"

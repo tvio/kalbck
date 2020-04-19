@@ -39,13 +39,13 @@ paths:
                   schema:
                       type: integer
             responses:
-                '200':
+                "200":
                     description: okey dokey
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/dny'
-                '401':
+                                $ref: "#/components/schemas/den"
+                "401":
                     description: uživatel není přihlášení
             security:
                 - kal_auth:
@@ -57,19 +57,19 @@ paths:
             summary: Aktualizovat den
             operationId: updateDen
             requestBody:
-                $ref: '#/components/requestBodies/den'
+                $ref: "#/components/requestBodies/den"
             responses:
-                '200':
+                "200":
                     description: okey dokey
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/den'
-                '400':
+                                $ref: "#/components/schemas/den"
+                "400":
                     description: JSON není validní
-                '401':
+                "401":
                     description: uživatel není přihlášení
-                '404':
+                "404":
                     description: ID nenalezeno
             security:
                 - kal_auth:
@@ -81,13 +81,13 @@ paths:
             summary: Přidat den
             operationId: addDen
             requestBody:
-                $ref: '#/components/requestBodies/den'
+                $ref: "#/components/requestBodies/den"
             responses:
-                '200':
+                "200":
                     description: okey dokey
-                '400':
+                "400":
                     description: JSON není validní
-                '401':
+                "401":
                     description: uživatel není přihlášení
             security:
                 - kal_auth:
@@ -107,17 +107,17 @@ paths:
                   style: simple
                   explode: false
                   schema:
-                      $ref: '#/components/schemas/den/datum'
+                      $ref: "#/components/schemas/den/datum"
             responses:
-                '200':
+                "200":
                     description: okey dokey
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/den'
-                '401':
+                                $ref: "#/components/schemas/den"
+                "401":
                     description: uživatel není přihlášení
-                '404':
+                "404":
                     description: ID nenalezeno
             security:
                 - kal_auth:
@@ -137,17 +137,17 @@ paths:
                   style: simple
                   explode: false
                   schema:
-                      $ref: '#/components/schemas/id'
+                      $ref: "#/components/schemas/id"
             responses:
-                '200':
+                "200":
                     description: okey dokey
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/chaty'
-                '401':
+                                $ref: "#/components/schemas/chaty"
+                "401":
                     description: uživatel není přihlášení
-                '404':
+                "404":
                     description: ID nenalezeno
             security:
                 - kal_auth:
@@ -160,21 +160,21 @@ paths:
             summary: Aktualizovat chat
             operationId: updateChat
             requestBody:
-                $ref: '#/components/requestBodies/chat'
+                $ref: "#/components/requestBodies/chat"
             responses:
-                '200':
+                "200":
                     description: okey dokey
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/chat'
-                '400':
+                                $ref: "#/components/schemas/chat"
+                "400":
                     description: JSON není validní
-                '401':
+                "401":
                     description: uživatel není přihlášení
-                '404':
+                "404":
                     description: ID nenalezeno
-                '405':
+                "405":
                     description: chat nelze zprocesovat, denID neexisuje
             security:
                 - kal_auth:
@@ -186,13 +186,13 @@ paths:
             summary: Vlož chat pro daný den
             operationId: postChatByDenId
             requestBody:
-                $ref: '#/components/requestBodies/chat'
+                $ref: "#/components/requestBodies/chat"
             responses:
-                '200':
+                "200":
                     description: okey dokey
-                '401':
+                "401":
                     description: uživatel není přihlášení
-                '405':
+                "405":
                     description: chat nelze zprocesovat, denID neexisuje
             security:
                 - kal_auth:
@@ -212,17 +212,17 @@ paths:
                   style: simple
                   explode: false
                   schema:
-                      $ref: '#/components/schemas/id'
+                      $ref: "#/components/schemas/id"
             responses:
-                '200':
+                "200":
                     description: okey dokey
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/chat'
-                '401':
+                                $ref: "#/components/schemas/chat"
+                "401":
                     description: uživatel není přihlášení
-                '404':
+                "404":
                     description: ID nenalezeno
             security:
                 - kal_auth: [read]
@@ -239,17 +239,17 @@ paths:
                   style: simple
                   explode: false
                   schema:
-                      $ref: '#/components/schemas/id'
+                      $ref: "#/components/schemas/id"
             responses:
-                '200':
+                "200":
                     description: okey dokey
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/chat'
-                '401':
+                                $ref: "#/components/schemas/chat"
+                "401":
                     description: uživatel není přihlášení
-                '404':
+                "404":
                     description: ID nenalezeno
             security:
                 - kal_auth:
@@ -270,7 +270,7 @@ components:
             type: object
             properties:
                 id:
-                    $ref: '#/components/schemas/id'
+                    $ref: "#/components/schemas/id"
                 kdo:
                     type: string
                     description: kdo má ušáka
@@ -281,6 +281,7 @@ components:
                 datum:
                     type: string
                     description: datum v roce
+                    default: 2020-04-20
                     format: date
                 den:
                     type: string
@@ -311,14 +312,14 @@ components:
             type: object
             properties:
                 id:
-                    $ref: '#/components/schemas/id'
+                    $ref: "#/components/schemas/id"
                 datum:
                     type: string
                     description: datum a čas chatu
                     format: date-time
                     default: 2020-07-01T15:21:16Z
                 denID:
-                    $ref: '#/components/schemas/id'
+                    $ref: "#/components/schemas/id"
                 kdo:
                     type: string
                     description: kdo vložil chat
@@ -333,11 +334,11 @@ components:
         dny:
             type: array
             items:
-                $ref: '#/components/schemas/den'
+                $ref: "#/components/schemas/den"
         chaty:
             type: array
             items:
-                $ref: '#/components/schemas/chat'
+                $ref: "#/components/schemas/chat"
     responses:
         unauthorized:
             description: uživatel není přihlášení
@@ -356,7 +357,7 @@ components:
             style: simple
             explode: false
             schema:
-                $ref: '#/components/schemas/id'
+                $ref: "#/components/schemas/id"
         pageSize:
             name: pageSize
             in: query
@@ -380,18 +381,18 @@ components:
             content:
                 application/json:
                     schema:
-                        $ref: '#/components/schemas/den'
+                        $ref: "#/components/schemas/den"
             required: true
         chat:
             content:
                 application/json:
                     schema:
-                        $ref: '#/components/schemas/chat'
+                        $ref: "#/components/schemas/chat"
             required: true
     securitySchemes:
         kal_auth:
             type: oauth2
             flows:
                 authorizationCode:
-                    authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth'
-                    tokenUrl: 'https://www.googleapis.com/oauth2/v4/token'
+                    authorizationUrl: "https://accounts.google.com/o/oauth2/v2/auth"
+                    tokenUrl: "https://www.googleapis.com/oauth2/v4/token"
