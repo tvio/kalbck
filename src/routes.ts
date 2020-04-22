@@ -4,39 +4,30 @@ import { request } from 'http'
 import * as moment from 'moment'
 // import * as fp from 'fastify-plugin'
 
-// const opts: fastify.RouteShorthandOptions = {
-//     schema: {
-//         params: {
-//             type: 'object',
-//             id: {
-//                 type: 'integer',
-//             },
-//         },
-//     },
-// }
+//TODO - preokontrolovat vsechny routy + getChatbyID, udelat celkovej disconnect, dodelat do return body vsude data
 
-// export default fp (async (server,  opts, next) =>{
-//     server.get('/status/:id', async function (req, reply) {
-//         const pepek = 'to jsem ja'
-//         const user = { user: pepek }
-//         // shows: { user: 'My serializer father - call father  serializer', key: 'another key' }
-//         console.log('response:', JSON.stringify(user))
-//         reply.send(req.params.id)
-//     })
-// }
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default async function (fastify, opts) {
     fastify.get('/kal/dny', async function (req, reply) {
         const ret = await db.instance.dny.find()
         for (const i in ret) {
-            ret[i].datum = moment(ret[i].datum).format('YYYY-MM-DD')
+            ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY')
         }
         console.log('response:', JSON.stringify(ret))
         return ret
     })
 
     fastify.put('/kal/dny', async function (req, reply) {
-        const inp = await db.instance.dny.save({ datum: req.body.datum }, req.body)
+        const inp = await db.instance.dny.update(
+            { datum: req.body.datum },
+            {
+                den: req.body.den,
+                pozn1: req.body.pozn1,
+                pozn2: req.body.pozn2,
+                pozn3: req.body.pozn3,
+                ss: req.body.ss,
+            },
+        )
         console.log('response:', JSON.stringify(reply))
         return reply.status
     })
@@ -44,7 +35,7 @@ export default async function (fastify, opts) {
     fastify.post('/kal/dny', async function (req, reply) {
         const inp = await db.instance.dny.insert(req.body)
         // shows: { user: 'My serializer father - call father  serializer', key: 'another key' }
-        console.log('response:', JSON.stringify(req.body))
+        console.log('response:', JSON.stringify(inp))
         return reply.status
     })
 
@@ -54,28 +45,78 @@ export default async function (fastify, opts) {
         try {
             const sql = `to_char(datum,'YYYY-MM-DD')='${req.params.datum}'`
             const ret = await db.instance.dny.where(sql)
-            ret[0].datum = moment(ret[0].datum).format('YYYY-MM-DD')
+            ret[0].datum = moment(ret[0].datum).format('DD.MM.YYYY')
             console.log('response:', ret[0])
             return ret[0]
         } catch (err) {
             console.log('Err ' + err)
-            db.instance.disconnect()
+            //  db.disconnect()
             return err
         }
     })
 
-    fastify.get('/kal/dny/{id}/chaty', async function (req, reply) {
-        const user = {
-            id: 555,
-            kdo: 'Turbous',
-            datum: '2019-04-10',
-            den: 'Ne',
-            pozn1: 'Msaterman',
-            pozn2: 'Lumik',
-            pozn3: 'Pfff',
+    fastify.get('/kal/:datum/lastChat', opts, async function (req, reply) {
+        try {
+            const sql = `to_char(denId,'YYYY-MM-DD')='${req.params.datum} order by id desc'`
+            const ret = await db.instance.chaty.where(sql)
+            ret[0].datum = moment(ret[0].datum).format('DD.MM.YYYY HH24:24:SS')
+            console.log('response:', ret[0])
+            return ret[0]
+        } catch (err) {
+            console.log('Err ' + err)
+            //   db.disconnect()
+            return err
         }
-        // shows: { user: 'My serializer father - call father  serializer', key: 'another key' }
-        console.log('response:', JSON.stringify(user))
-        reply.send(user)
+    })
+
+    fastify.put('/kal/chaty', opts, async function (req, reply) {
+        try {
+            const inp = await db.instance.chaty.update(req.body.id, { datum: req.body.datum, text: req.body.text })
+            console.log('response:', inp)
+            return inp
+        } catch (err) {
+            console.log('Err ' + err)
+            //db.disconnect()
+            return err
+        }
+    })
+
+    fastify.post('/kal/chaty', opts, async function (req, reply) {
+        try {
+            const inp = await db.instance.chaty.insert(req.body)
+            console.log('response:', JSON.stringify(inp))
+            return inp
+        } catch (err) {
+            console.log('Err ' + err)
+            //  db.disconnect()
+            return err
+        }
+    })
+    fastify.get('/kal/chaty/:denid', opts, async function (req, reply) {
+        try {
+            console.log(req.params.denid)
+            const ret = await db.instance.chaty.find({ denid: req.params.denid })
+            for (const i in ret) {
+                ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY HH24:MM:SS')
+            }
+            console.log('response:', JSON.stringify(ret))
+            return ret
+        } catch (err) {
+            console.log('Err ' + err)
+            //db.disconnect()
+            return err
+        }
+    })
+    fastify.delete('/kal/chaty/:id', opts, async function (req, reply) {
+        try {
+            const ret = await db.instance.chaty.destroy({ id: req.body.Id })
+
+            console.log('response:', JSON.stringify(ret))
+            return ret
+        } catch (err) {
+            console.log('Err ' + err)
+            //  db.disconnect()
+            return err
+        }
     })
 }

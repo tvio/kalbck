@@ -123,28 +123,28 @@ paths:
                 - kal_auth:
                       - write:den
                       - read:den
-    /dny/{id}/chaty:
+    /dny/{datum}/lastChat:
         get:
             tags:
                 - dny
-            summary: Vypiš všechny chaty za daný den
-            operationId: getAllChatsByDenId
+            summary: Vypiš poslední chat pro přehled
+            operationId: getLastChatInDay
             parameters:
-                - name: id
+                - name: datum
                   in: path
-                  description: Id které používáme
+                  description: datum
                   required: true
                   style: simple
                   explode: false
                   schema:
-                      $ref: "#/components/schemas/id"
+                      $ref: "#/components/schemas/den/datum"
             responses:
                 "200":
                     description: okey dokey
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/chaty"
+                                $ref: "#/components/schemas/chat"
                 "401":
                     description: uživatel není přihlášení
                 "404":
@@ -198,34 +198,6 @@ paths:
                 - kal_auth:
                       - write:den
                       - read:den
-    /chaty/{denId}:
-        get:
-            tags:
-                - chaty
-            summary: Najdi chat dle den
-            operationId: getChatById
-            parameters:
-                - name: datum
-                  in: path
-                  description: chaty dle dne
-                  required: true
-                  style: simple
-                  explode: false
-                  schema:
-                      $ref: "#/components/schemas/id"
-            responses:
-                "200":
-                    description: okey dokey
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/chat"
-                "401":
-                    description: uživatel není přihlášení
-                "404":
-                    description: ID nenalezeno
-            security:
-                - kal_auth: [read]
         delete:
             tags:
                 - chaty
@@ -255,6 +227,35 @@ paths:
                 - kal_auth:
                       - write:den
                       - read:den
+
+    /chaty/{denid}:
+        get:
+            tags:
+                - chaty
+            summary: Najdi chat dle denid
+            operationId: getChatByDenId
+            parameters:
+                - name: denid
+                  in: path
+                  description: chaty dle denid
+                  required: true
+                  style: simple
+                  explode: false
+                  schema:
+                      $ref: "#/components/schemas/chat/denid"
+            responses:
+                "200":
+                    description: okey dokey
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/chaty"
+                "401":
+                    description: uživatel není přihlášení
+                "404":
+                    description: ID nenalezeno
+            security:
+                - kal_auth: [read]
 
 components:
     schemas:
@@ -306,7 +307,7 @@ components:
         chat:
             required:
                 - datum
-                - denID
+                - denid
                 - kdo
                 - text
             type: object
@@ -317,9 +318,11 @@ components:
                     type: string
                     description: datum a čas chatu
                     format: date-time
-                    default: 2020-07-01T15:21:16Z
-                denID:
-                    $ref: "#/components/schemas/id"
+
+                denid:
+                    type: integer
+                    description: id datumu - fk
+                    default: 8
                 kdo:
                     type: string
                     description: kdo vložil chat
@@ -358,6 +361,16 @@ components:
             explode: false
             schema:
                 $ref: "#/components/schemas/id"
+        denid:
+            name: denid
+            in: path
+            description: iddne které používáme
+            required: true
+            style: simple
+            explode: false
+            schema:
+                $ref: "#/components/schemas/chaty/denid"
+
         pageSize:
             name: pageSize
             in: query
