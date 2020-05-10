@@ -153,6 +153,36 @@ paths:
                 - kal_auth:
                       - write:den
                       - read:den
+    /dny/{datum}/chaty:
+        get:
+            tags:
+                - dny
+            summary: Vypiš všechny chaty pro kartu
+            operationId: getChatyByDatumDne
+            parameters:
+                - name: datum
+                  in: path
+                  description: datum
+                  required: true
+                  style: simple
+                  explode: false
+                  schema:
+                      $ref: "#/components/schemas/den/datum"
+            responses:
+                "200":
+                    description: okey dokey
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/chaty"
+                "401":
+                    description: uživatel není přihlášení
+                "404":
+                    description: ID nenalezeno
+            security:
+                - kal_auth:
+                      - write:den
+                      - read:den
     /chaty:
         put:
             tags:
@@ -250,6 +280,34 @@ paths:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/chaty"
+                "401":
+                    description: uživatel není přihlášení
+                "404":
+                    description: ID nenalezeno
+            security:
+                - kal_auth: [read]
+    /chaty/{id}:
+        get:
+            tags:
+                - chaty
+            summary: Najdi chat dle id
+            operationId: getChatById
+            parameters:
+                - name: id
+                  in: path
+                  description: chaty dle id
+                  required: true
+                  style: simple
+                  explode: false
+                  schema:
+                      $ref: "#/components/schemas/id"
+            responses:
+                "200":
+                    description: okey dokey
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/chat"
                 "401":
                     description: uživatel není přihlášení
                 "404":

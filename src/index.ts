@@ -6,6 +6,8 @@ import * as path from 'path'
 import routes from './routes'
 import db from './db'
 import settings from './settings'
+import { log } from './log'
+
 const server: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify({
     logger: { prettyPrint: true },
 })
@@ -28,6 +30,8 @@ server.register(fastifyBlipp)
 const start = async (): Promise<void> => {
     try {
         await db.connect(settings.postgresql)
+        await db.mon()
+
         await server.listen(3001)
         server.blipp()
     } catch (err) {
