@@ -28,7 +28,7 @@ const start = async () => {
     try {
         await db_1.default.connect(settings_1.default.postgresql);
         await db_1.default.mon();
-        await server.listen(settings_1.default.port || 3001);
+        await server.listen(settings_1.default.port, '0.0.0.0');
         server.blipp();
     }
     catch (err) {

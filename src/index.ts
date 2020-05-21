@@ -32,7 +32,7 @@ const start = async (): Promise<void> => {
         await db.connect(settings.postgresql)
         await db.mon()
 
-        await server.listen(settings.port || 3001)
+        await server.listen(settings.port, '0.0.0.0')
         server.blipp()
     } catch (err) {
         console.log(err)
