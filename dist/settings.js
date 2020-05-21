@@ -13,6 +13,7 @@ settings.log = {
 // settings.fastify = {
 //     querystringParser: (str: string) => qs.parse(str),
 // }
+settings.port = process.env.PORT;
 settings.postgresql = {
     host: process.env.PG_HOST || '127.0.0.1',
     port: process.env.PG_PORT || 5439,
