@@ -36,10 +36,14 @@ export default async function (fastify, opts) {
     })
 
     fastify.post('/kal/dny', async function (req, reply) {
-        const inp = await db.instance.dny.insert(req.body)
-        // shows: { user: 'My serializer father - call father  serializer', key: 'another key' }
-        console.log('response:', JSON.stringify(inp))
-        return reply.status
+        try {
+            const inp = await db.instance.dny.insert(req.body)
+            // shows: { user: 'My serializer father - call father  serializer', key: 'another key' }
+            console.log('response:', JSON.stringify(inp))
+            return reply.status
+        } catch (e) {
+            console.log(e)
+        }
     })
 
     fastify.get('/kal/dny/:datum', opts, async function (req, reply) {
