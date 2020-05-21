@@ -22,11 +22,11 @@ class db {
     static instance: any
     static connect = async function (settings) {
         db.instance = await massive({
-            host: settings.host,
-            port: settings.port,
-            database: settings.database,
-            user: settings.user,
-            password: settings.password,
+            host: settings.postgresql.host,
+            port: settings.postgresql.port,
+            database: settings.postgresql.database,
+            user: settings.postgresql.user,
+            password: settings.postgresql.password,
             ssl: false,
             poolSize: settings.pool || 10,
         })
