@@ -1,8 +1,8 @@
 const path = import('path')
 const qs = import('qs')
 const env = process.env.NODE_ENV || 'dev'
-
 import * as cenv from 'custom-env'
+
 cenv.env(env)
 
 const settings: any = { env }

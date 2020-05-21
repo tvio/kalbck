@@ -3,12 +3,17 @@
     "private": true,
     "version": "1.0.0",
     "description": "Kal bck",
+    "engines": {
+        "node": "13.x"
+    },
     "scripts": {
         "startx": "yarn run build && node dist/index.js",
         "startx:dev": "cross-env NODE_ENV=dev docker-compose up -d && nodemon",
-        "build": "tsc &&  node ./dist/index.js",
+        "build": "tsc",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-        "start": "nodemon -r  ./src/index.ts"
+        "start": "NODE_ENV=prod&& node ./dist/index.js",
+        "startdev": " SET NODE_ENV=dev&& node ./dist/index.js",
+        "rundev": "nodemon -r  ./src/index.ts"
     },
     "devDependencies": {
         "@types/node": "^13.9.5",

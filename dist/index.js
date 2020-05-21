@@ -27,6 +27,7 @@ server.register(fastifyBlipp);
 const start = async () => {
     try {
         await db_1.default.connect(settings_1.default.postgresql);
+        await db_1.default.mon();
         await server.listen(3001);
         server.blipp();
     }
