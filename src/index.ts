@@ -6,7 +6,7 @@ import * as path from 'path'
 import routes from './routes'
 import db from './db'
 import settings from './settings'
-import fastifyCors from 'fastify-cors'
+import * as fastifyCors from 'fastify-cors'
 import { log } from './log'
 
 const server: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify({
