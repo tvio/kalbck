@@ -6,6 +6,7 @@ import * as path from 'path'
 import routes from './routes'
 import db from './db'
 import settings from './settings'
+import fastifyCors from 'fastify-cors'
 import { log } from './log'
 
 const server: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify({
@@ -22,7 +23,10 @@ const optsSwagger = {
     exposeRoute: true,
     routePrefix: '/kal',
 }
-
+//pak cors zmenit a dat na true
+server.register(fastifyCors, {
+    origin: false,
+})
 server.register(routes)
 server.register(fastifySwagger, optsSwagger)
 server.register(fastifyBlipp)
