@@ -11,8 +11,8 @@ import * as moment from 'moment'
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default async function (fastify, opts) {
     fastify.get('/kal/dny', async function (req, reply) {
-        //const ret = await db.instance.dny.find({})
-        const ret = await db.instance.query('select * from kal.dny')
+        const ret = await db.instance.kal.dny.find({})
+        //const ret = await db.instance.query('select * from kal.dny')
         //const log = await log('GET /kal/dny')
         for (const i in ret) {
             ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY')
@@ -22,7 +22,7 @@ export default async function (fastify, opts) {
     })
 
     fastify.put('/kal/dny', async function (req, reply) {
-        const inp = await db.instance.dny.update(
+        const inp = await db.instance.kal.dny.update(
             { datum: req.body.datum },
             {
                 den: req.body.den,
@@ -38,7 +38,7 @@ export default async function (fastify, opts) {
 
     fastify.post('/kal/dny', async function (req, reply) {
         try {
-            const inp = await db.instance.dny.insert(req.body)
+            const inp = await db.instance.kal.dny.insert(req.body)
             // shows: { user: 'My serializer father - call father  serializer', key: 'another key' }
             console.log('response:', JSON.stringify(inp))
             return reply.status
@@ -52,7 +52,7 @@ export default async function (fastify, opts) {
         //console.log('fromatovane datum', datum)
         try {
             const sql = `to_char(datum,'YYYY-MM-DD')='${req.params.datum}'`
-            const ret = await db.instance.dny.where(sql)
+            const ret = await db.instance.kal.dny.where(sql)
             ret[0].datum = moment(ret[0].datum).format('DD.MM.YYYY')
             console.log('response:', ret[0])
             return ret[0]
@@ -66,7 +66,7 @@ export default async function (fastify, opts) {
     fastify.get('/kal/dny/:datum/lastChat', opts, async function (req, reply) {
         try {
             const sql = `denid in (select id from kal.dny where to_char(datum,'YYYY-MM-DD')='${req.params.datum}') order by id desc`
-            const ret = await db.instance.chaty.where(sql)
+            const ret = await db.instance.kal.chaty.where(sql)
             ret[0].datum = moment(ret[0].datum).format('DD.MM.YYYY HH24:24:SS')
             console.log('response:', ret[0])
             return ret[0]
@@ -80,7 +80,7 @@ export default async function (fastify, opts) {
     fastify.get('/kal/dny/:datum/chaty', opts, async function (req, reply) {
         try {
             const sql = `denid in (select id from kal.dny where to_char(datum,'YYYY-MM-DD')='${req.params.datum}') `
-            const ret = await db.instance.chaty.where(sql)
+            const ret = await db.instance.kal.chaty.where(sql)
             for (const i in ret) {
                 ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY HH24:24:SS')
             }
@@ -95,7 +95,7 @@ export default async function (fastify, opts) {
 
     fastify.put('/kal/chaty', opts, async function (req, reply) {
         try {
-            const inp = await db.instance.chaty.update(req.body.id, { datum: req.body.datum, text: req.body.text })
+            const inp = await db.instance.kal.chaty.update(req.body.id, { datum: req.body.datum, text: req.body.text })
             console.log('response:', inp)
             return inp
         } catch (err) {
@@ -107,7 +107,7 @@ export default async function (fastify, opts) {
 
     fastify.post('/kal/chaty', opts, async function (req, reply) {
         try {
-            const inp = await db.instance.chaty.insert(req.body)
+            const inp = await db.instance.kal.chaty.insert(req.body)
             console.log('response:', JSON.stringify(inp))
             return inp
         } catch (err) {
@@ -135,7 +135,7 @@ export default async function (fastify, opts) {
     fastify.get('/kal/chaty/:id', opts, async function (req, reply) {
         try {
             console.log(req.params.id)
-            const ret = await db.instance.chaty.find({ id: req.params.id })
+            const ret = await db.instance.kal.chaty.find({ id: req.params.id })
             ret[0].datum = moment(ret[0].datum).format('DD.MM.YYYY HH24:MM:SS')
             console.log('response:', JSON.stringify(ret[0]))
             return ret[0]
@@ -147,7 +147,7 @@ export default async function (fastify, opts) {
     })
     fastify.delete('/kal/chaty/:id', opts, async function (req, reply) {
         try {
-            const ret = await db.instance.chaty.destroy({ id: req.body.Id })
+            const ret = await db.instance.kal.chaty.destroy({ id: req.body.Id })
 
             console.log('response:', JSON.stringify(ret))
             return ret
