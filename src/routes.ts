@@ -11,7 +11,8 @@ import * as moment from 'moment'
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default async function (fastify, opts) {
     fastify.get('/kal/dny', async function (req, reply) {
-        const ret = await db.instance.dny.find({})
+        //const ret = await db.instance.dny.find({})
+        const ret = await db.instance.query('select * from kal.dny')
         //const log = await log('GET /kal/dny')
         for (const i in ret) {
             ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY')
