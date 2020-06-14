@@ -79,7 +79,7 @@ export default async function (fastify, opts) {
 
     fastify.get('/kal/dny/:datum/chaty', opts, async function (req, reply) {
         try {
-            const sql = `denid in (select id from kal.dny where to_char(datum,'YYYY-MM-DD')='${req.params.datum}') `
+            const sql = `denid in (select id from kal.dny where to_char(datum,'YYYY-MM-DD')='${req.params.datum}')  order by id desc`
             const ret = await db.instance.kal.chaty.where(sql)
             for (const i in ret) {
                 ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY HH24:24:SS')
