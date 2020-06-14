@@ -7,6 +7,7 @@ const path = require("path");
 const routes_1 = require("./routes");
 const db_1 = require("./db");
 const settings_1 = require("./settings");
+const fastifyCors = require("fastify-cors");
 const server = fastify({
     logger: { prettyPrint: true },
 });
@@ -21,6 +22,10 @@ const optsSwagger = {
     exposeRoute: true,
     routePrefix: '/kal',
 };
+//pak cors zmenit a dat na true
+server.register(fastifyCors, {
+    origin: 'http://abc.ce',
+});
 server.register(routes_1.default);
 server.register(fastifySwagger, optsSwagger);
 server.register(fastifyBlipp);
