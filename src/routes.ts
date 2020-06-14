@@ -62,10 +62,12 @@ export default async function (fastify, opts) {
             return err
         }
     })
-
+    // problem s formatovanim data  nebo where ???
     fastify.get('/kal/dny/:datum/lastChat', opts, async function (req, reply) {
         try {
-            const sql = `denid in (select id from kal.dny where to_char(datum,'YYYY-MM-DD')='${req.params.datum}') order by id desc`
+            //  const sql = `denid in (select id from kal.dny where to_char(datum,'YYYY-MM-DD')='${req.params.datum}') order by id desc`
+            const den = '2020-06-14'
+            const sql = `denid in (select id from kal.dny where to_char(datum,'YYYY-MM-DD')=${den}) order by id desc`
             const ret = await db.instance.kal.chaty.where(sql)
             ret[0].datum = moment(ret[0].datum).format('DD.MM.YYYY HH24:24:SS')
             console.log('response:', ret[0])
@@ -76,7 +78,7 @@ export default async function (fastify, opts) {
             return err
         }
     })
-
+    // necraci nic, problem  s where??
     fastify.get('/kal/dny/:datum/chaty', opts, async function (req, reply) {
         try {
             const sql = `denid in (select id from kal.dny where to_char(datum,'YYYY-MM-DD')='${req.params.datum}')  order by id desc`
@@ -131,7 +133,7 @@ export default async function (fastify, opts) {
     //         return err
     //     }
     // })
-
+    // nemam osetrene null - vyhodi chybu na datum v prazdnem objektu
     fastify.get('/kal/chaty/:id', opts, async function (req, reply) {
         try {
             console.log(req.params.id)
