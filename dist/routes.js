@@ -8,8 +8,9 @@ const moment = require("moment");
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 async function default_1(fastify, opts) {
     fastify.get('/kal/dny', async function (req, reply) {
-        const ret = await db_1.default.instance.kal.dny.find({});
+        //const ret = await db.instance.kal.dny.find({})
         //const ret = await db.instance.query('select * from kal.dny')
+        const ret = await db_1.default.instance.query('select version();');
         //const log = await log('GET /kal/dny')
         for (const i in ret) {
             ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY');
@@ -55,9 +56,12 @@ async function default_1(fastify, opts) {
             return err;
         }
     });
+    // problem s formatovanim data  nebo where ???
     fastify.get('/kal/dny/:datum/lastChat', opts, async function (req, reply) {
         try {
-            const sql = `denid in (select id from kal.dny where to_char(datum,'YYYY-MM-DD')='${req.params.datum}') order by id desc`;
+            //  const sql = `denid in (select id from kal.dny where to_char(datum,'YYYY-MM-DD')='${req.params.datum}') order by id desc`
+            const den = '2020-06-14';
+            const sql = `denid in (select id from kal.dny where to_char(datum,'YYYY-MM-DD')='${den}') order by id desc`;
             const ret = await db_1.default.instance.kal.chaty.where(sql);
             ret[0].datum = moment(ret[0].datum).format('DD.MM.YYYY HH24:24:SS');
             console.log('response:', ret[0]);
@@ -69,9 +73,10 @@ async function default_1(fastify, opts) {
             return err;
         }
     });
+    // necraci nic, problem  s where??
     fastify.get('/kal/dny/:datum/chaty', opts, async function (req, reply) {
         try {
-            const sql = `denid in (select id from kal.dny where to_char(datum,'YYYY-MM-DD')='${req.params.datum}') `;
+            const sql = `denid in (select id from kal.dny where to_char(datum,'YYYY-MM-DD')='${req.params.datum}')  order by id desc`;
             const ret = await db_1.default.instance.kal.chaty.where(sql);
             for (const i in ret) {
                 ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY HH24:24:SS');
@@ -124,6 +129,7 @@ async function default_1(fastify, opts) {
     //         return err
     //     }
     // })
+    // nemam osetrene null - vyhodi chybu na datum v prazdnem objektu
     fastify.get('/kal/chaty/:id', opts, async function (req, reply) {
         try {
             console.log(req.params.id);
