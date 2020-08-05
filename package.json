@@ -31,7 +31,7 @@
         "@types/qs": "^6.9.1",
         "custom-env": "^2.0.1",
         "dotenv": "^8.2.0",
-        "fastify": "^2.13.0",
+        "fastify": "^2.15.1",
         "fastify-blipp": "^2.2.1",
         "fastify-cors": "^3.0.3",
         "fastify-plugin": "^1.6.1",
