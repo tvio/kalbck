@@ -241,6 +241,23 @@ paths:
                     description: ID nenalezeno
             security:
                 - kal_auth: [read]
+    /chaty/lastchat:
+        get:
+            tags:
+                - chaty
+            summary: Najdi posledni chaty ve vsech dnech
+            operationId: getLastChaty
+            responses:
+                "200":
+                    description: okey dokey
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/chaty"
+                "401":
+                    description: uživatel není přihlášení
+            security:
+                - kal_auth: [read]
     /chaty/{id}:
         get:
             tags:

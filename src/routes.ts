@@ -5,7 +5,7 @@ import * as moment from 'moment'
 
 // import * as fp from 'fastify-plugin'
 // TODO Udelat upravu pro remote a local dny.find a kal.dny.find
-//TODO - strakonovani
+//TODO - strakonovani pro dny a chaty/lastchaty
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default async function (fastify, opts) {
@@ -168,5 +168,25 @@ export default async function (fastify, opts) {
             //  db.disconnect()
             return err
         }
-    })
+    }),
+    fastify.get('/kal/chaty/lastchat', opts, async function (req, reply) {
+            try {
+                const sql = 'select a.* from kal.chaty a where a.id=(select max(id) from kal.chaty where a.denId=denId)'
+                const ret = await db.instance.query(sql)|| []
+                  if (ret.length > 0) {
+                    for (const i in ret) {
+                        ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY HH24:24:SS')
+                                      
+                       console.log('response:', ret)
+                        return ret
+                    }
+                    } else {return ret }
+                       
+               } catch (err) {
+                   console.log('Err ' + err)
+                   //   db.disconnect()
+                   return err
+               }
+            
+        })
 }
