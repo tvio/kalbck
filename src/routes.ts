@@ -119,7 +119,7 @@ export default async function (fastify, opts) {
 
     fastify.post('/kal/chaty', opts, async function (req, reply) {
         try {
-            const inp = await db.instance.chaty.insert(req.body)
+             const inp = await db.instance.chaty.insert(req.body)
             console.log('response:', JSON.stringify(inp))
             return inp
         } catch (err) {
