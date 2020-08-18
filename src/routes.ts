@@ -72,7 +72,7 @@ export default async function (fastify, opts) {
             const sql = `denid in (select id from kal.dny where to_char(datum,'DD.MM.YYYY')='${req.params.datum}') order by id desc`
             const ret = await db.instance.chaty.where(sql)|| []
             if (ret.length > 0) {
-            ret[0].datum = moment(ret[0].datum).format('DD.MM.YYYY HH24:24:SS')
+            ret[0].datum = moment(ret[0].datum).format('DD.MM.YYYY')
             console.log('response:', ret[0])
             return ret[0]}
             else {return ret}
@@ -91,7 +91,7 @@ export default async function (fastify, opts) {
             const ret = await db.instance.chaty.where(sql)|| []
             if (ret.length > 0) {
              for (const i in ret) {
-                 ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY HH24:24:SS')
+                 ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY')
                                
                 console.log('response:', ret)
                  return ret
@@ -119,7 +119,8 @@ export default async function (fastify, opts) {
 
     fastify.post('/kal/chaty', opts, async function (req, reply) {
         try {
-             const inp = await db.instance.chaty.insert(req.body)
+            const inp = await db.instance.chaty.insert(req.body)
+            inp.datum = moment(inp.datum).format('DD.MM.YYYY')
             console.log('response:', JSON.stringify(inp))
             return inp
         } catch (err) {
@@ -133,7 +134,7 @@ export default async function (fastify, opts) {
             console.log(req.params.denid)
             const ret = await db.instance.chaty.find({ denid: req.params.denid })
             for (const i in ret) {
-                ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY HH24:MM:SS')
+                ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY')
             }
             console.log('response:', JSON.stringify(ret))
             return ret
@@ -175,7 +176,7 @@ export default async function (fastify, opts) {
                 const ret = await db.instance.query(sql)|| []
                   if (ret.length > 0) {
                     for (const i in ret) {
-                        ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY HH24:24:SS')
+                        ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY')
                                       
                        console.log('response:', ret)
                         return ret
