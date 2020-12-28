@@ -70,14 +70,15 @@ export default async function (fastify, opts) {
             //  const sql = `denid in (select id from kal.dny where to_char(datum,'YYYY-MM-DD')='${req.params.datum}') order by id desc`
             const den = '2020-06-14'
             const sql = `denid in (select id from kal.dny where to_char(datum,'DD.MM.YYYY')='${req.params.datum}') order by id desc`
-            const ret = await db.instance.chaty.where(sql)|| []
+            const ret = (await db.instance.chaty.where(sql)) || []
             if (ret.length > 0) {
-            ret[0].datum = moment(ret[0].datum).format('DD.MM.YYYY')
-            console.log('response:', ret[0])
-            return ret[0]}
-            else {return ret}
-            
-            } catch (err) {
+                ret[0].datum = moment(ret[0].datum).format('DD.MM.YYYY')
+                console.log('response:', ret[0])
+                return ret[0]
+            } else {
+                return ret
+            }
+        } catch (err) {
             console.log('Err ' + err)
             //   db.disconnect()
             return err
@@ -88,16 +89,17 @@ export default async function (fastify, opts) {
         try {
             // const sql = `denid in (select id from kal.dny where to_char(datum,'DD.MM.YYYY')='${req.params.datum}')  order by id desc`
             const sql = `denid in (select id from kal.dny where to_char(datum,'DD.MM.YYYY')='${req.params.datum}')  order by id desc`
-            const ret = await db.instance.chaty.where(sql)|| []
+            const ret = (await db.instance.chaty.where(sql)) || []
             if (ret.length > 0) {
-             for (const i in ret) {
-                 ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY')
-                               
-                console.log('response:', ret)
-                 return ret
-             }
-             } else {return ret }
-                
+                for (const i in ret) {
+                    ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY')
+
+                    console.log('response:', ret)
+                    return ret
+                }
+            } else {
+                return ret
+            }
         } catch (err) {
             console.log('Err ' + err)
             //   db.disconnect()
@@ -144,7 +146,7 @@ export default async function (fastify, opts) {
             return err
         }
     })
- 
+
     // fastify.get('/kal/chaty/:id', opts, async function (req, reply) {
     //     try {
     //         console.log(req.params.id)
@@ -170,24 +172,24 @@ export default async function (fastify, opts) {
             return err
         }
     }),
-    fastify.get('/kal/chaty/lastchat', opts, async function (req, reply) {
+        fastify.get('/kal/chaty/lastchat', opts, async function (req, reply) {
             try {
                 const sql = 'select a.* from kal.chaty a where a.id=(select max(id) from kal.chaty where a.denId=denId)'
-                const ret = await db.instance.query(sql)|| []
-                  if (ret.length > 0) {
+                const ret = (await db.instance.query(sql)) || []
+                if (ret.length > 0) {
                     for (const i in ret) {
                         ret[i].datum = moment(ret[i].datum).format('DD.MM.YYYY')
-                                      
-                       console.log('response:', ret)
+
+                        console.log('response:', ret)
                         return ret
                     }
-                    } else {return ret }
-                       
-               } catch (err) {
-                   console.log('Err ' + err)
-                   //   db.disconnect()
-                   return err
-               }
-            
+                } else {
+                    return ret
+                }
+            } catch (err) {
+                console.log('Err ' + err)
+                //   db.disconnect()
+                return err
+            }
         })
 }

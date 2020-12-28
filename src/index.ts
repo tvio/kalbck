@@ -25,15 +25,16 @@ const optsSwagger = {
 }
 //pak cors zmenit a dat na true
 server.register(fastifyCors, {
-    origin: '*'
-    // methods: 'GET,HEAD,OPTIONS,POST,PUT',
-    // allowedHeaders: [
-    //     'Access-Control-Allow-Headers',
-    //     'Origin,Accept',
-    //     'X-Requested-With',
-    //     'Content-Type',
-    //     'Access-Control-Request-Method',
-    //     'Access-Control-Request-Headers',
+    origin: '*',
+    methods: 'GET,HEAD,OPTIONS,POST,PUT',
+    allowedHeaders: [
+        'Access-Control-Allow-Headers',
+        'Origin,Accept',
+        'X-Requested-With',
+        'Content-Type',
+        'Access-Control-Request-Method',
+        'Access-Control-Request-Headers',
+    ],
     // ],
     // credentials: true,
     // preflightContinue: true,
